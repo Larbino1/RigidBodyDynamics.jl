@@ -73,6 +73,13 @@ root_body(mechanism::Mechanism) = first(bodies(mechanism))
 """
 $(SIGNATURES)
 
+Return the frames that are part of the `Mechanism` as an iterable collection.
+"""
+frames(mechanism::Mechanism) = (t.from for t in flatten(frame_definitions(b) for b in bodies(mechanism)))
+
+"""
+$(SIGNATURES)
+
 Return the default frame of the root body.
 """
 root_frame(mechanism::Mechanism) = default_frame(root_body(mechanism))
@@ -286,6 +293,13 @@ or if there's more than one.
 """
 findjoint(mechanism::Mechanism, name::String) = findunique(j -> string(j) == name, joints(mechanism))
 
+"""
+$(SIGNATURES)
+
+Return the frame with the given name. Errors if there is no frame with the given name,
+or if there's more than one.
+"""
+findframe(mechanism::Mechanism, name::String) = findunique(f -> string(f) == name, [f for f in frames(mechanism)])
 
 """
 $(SIGNATURES)
@@ -308,3 +322,4 @@ function findjoint(mechanism::Mechanism, id::JointID)
     JointID(ret) == id || error() # should never happen
     ret
 end
+
